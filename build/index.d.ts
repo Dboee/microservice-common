@@ -3,10 +3,5 @@ interface RGBColor {
     green: number;
     blue: number;
 }
-interface CMYKColor {
-    cyan: number;
-    magenta: number;
-    yellow: number;
-    black: number;
-}
 declare const color: RGBColor;
+export default color;

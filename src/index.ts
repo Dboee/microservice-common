@@ -12,7 +12,7 @@ interface CMYKColor {
 }
 
 const color: RGBColor = {
-  red: 255,
+  red: 200,
   green: 0,
   blue: 0,
 };
