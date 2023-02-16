@@ -10,6 +10,7 @@ export const errorHandler = (
   if (err instanceof CustomError) {
     return res.status(err.statusCode).send({ errors: err.serializeErrors() });
   }
+  console.error('generic error: ', err);
 
-  res.status(400).send({ errors: [{ message: 'Something went wrong' }] });
+  res.status(400).send({ errors: [{ message: 'Generic error' }] });
 };
