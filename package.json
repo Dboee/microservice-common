@@ -1,7 +1,7 @@
 {
   "name": "@delight-system/microservice-common",
   "version": "1.0.11",
-  "description": "testing to see if it updates.",
+  "description": "Common microservice module.",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "files": [

@@ -11,8 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Publisher = void 0;
 const event_hubs_1 = require("@azure/event-hubs");
-if (!process.env.PUBLISH_KEY)
-    throw new Error('No publish key defined in environment variables');
 class Publisher {
     constructor(eventHubName, consumerGroup) {
         // Client Setup
