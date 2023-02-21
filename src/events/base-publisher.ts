@@ -20,7 +20,7 @@ export abstract class Publisher<T extends Event> {
 
   // Azure Spesific
   abstract eventHubName: EventHubs;
-  private eventHubsResourceName: string;
+  // private eventHubsResourceName: string;
   // private fullyQualifiedNamespace: string;
   private credential: string;
   // private credential: DefaultAzureCredential;
@@ -30,7 +30,7 @@ export abstract class Publisher<T extends Event> {
   constructor(eventHubName: EventHubs, consumerGroup: T['consumerGroup']) {
     // Client Setup
 
-    this.eventHubsResourceName = EVENT_HUBS_RESOURCE_NAME;
+    // this.eventHubsResourceName = EVENT_HUBS_RESOURCE_NAME;
     // this.fullyQualifiedNamespace = `${this.eventHubsResourceName}.servicebus.windows.net`;
     if (!process.env.PUBLISH_KEY)
       throw new Error('No publish key defined in environment variables');

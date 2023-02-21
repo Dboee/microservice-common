@@ -9,7 +9,6 @@ export declare abstract class Publisher<T extends Event> {
     abstract consumerGroup: T['consumerGroup'];
     abstract eventHubName: EventHubs;
     private eventHubsResourceName;
-    private fullyQualifiedNamespace;
     private credential;
     private client;
     constructor(eventHubName: EventHubs, consumerGroup: T['consumerGroup']);
