@@ -1,5 +1,5 @@
 import { EventData, EventHubProducerClient } from '@azure/event-hubs';
-import { DefaultAzureCredential } from '@azure/identity';
+// import { DefaultAzureCredential } from '@azure/identity';
 
 import { ConsumerGroups } from './consumer-groups';
 import { EventHubs } from './event-hubs';
@@ -21,8 +21,9 @@ export abstract class Publisher<T extends Event> {
   // Azure Spesific
   abstract eventHubName: EventHubs;
   private eventHubsResourceName: string;
-  private fullyQualifiedNamespace: string;
-  private credential: DefaultAzureCredential;
+  // private fullyQualifiedNamespace: string;
+  private credential: string;
+  // private credential: DefaultAzureCredential;
 
   private client: EventHubProducerClient;
 
@@ -30,8 +31,11 @@ export abstract class Publisher<T extends Event> {
     // Client Setup
 
     this.eventHubsResourceName = EVENT_HUBS_RESOURCE_NAME;
-    this.fullyQualifiedNamespace = `${this.eventHubsResourceName}.servicebus.windows.net`;
-    this.credential = new DefaultAzureCredential();
+    // this.fullyQualifiedNamespace = `${this.eventHubsResourceName}.servicebus.windows.net`;
+    if (!process.env.PUBLISH_KEY)
+      throw new Error('No publish key defined in environment variables');
+    this.credential = process.env.PUBLISH_KEY;
+    // this.credential = new DefaultAzureCredential();
 
     this.client = this.setConsumerClient(eventHubName, consumerGroup);
   }
@@ -41,9 +45,9 @@ export abstract class Publisher<T extends Event> {
     consumerGroup: T['consumerGroup']
   ) {
     return new EventHubProducerClient(
-      this.fullyQualifiedNamespace,
-      eventHubName,
-      this.credential
+      // this.fullyQualifiedNamespace,
+      this.credential,
+      eventHubName
     );
   }
 
