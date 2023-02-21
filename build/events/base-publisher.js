@@ -15,7 +15,7 @@ const EVENT_HUBS_RESOURCE_NAME = 'microservice-namespace';
 class Publisher {
     constructor(eventHubName, consumerGroup) {
         // Client Setup
-        this.eventHubsResourceName = EVENT_HUBS_RESOURCE_NAME;
+        // this.eventHubsResourceName = EVENT_HUBS_RESOURCE_NAME;
         // this.fullyQualifiedNamespace = `${this.eventHubsResourceName}.servicebus.windows.net`;
         if (!process.env.PUBLISH_KEY)
             throw new Error('No publish key defined in environment variables');

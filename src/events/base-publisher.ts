@@ -4,7 +4,7 @@ import { EventData, EventHubProducerClient } from '@azure/event-hubs';
 import { ConsumerGroups } from './consumer-groups';
 import { EventHubs } from './event-hubs';
 
-const EVENT_HUBS_RESOURCE_NAME = 'microservice-namespace';
+// const EVENT_HUBS_RESOURCE_NAME = 'microservice-namespace';
 
 // Event hubs
 // This variable refers to the name of the Azure resource
@@ -14,6 +14,9 @@ interface Event {
   consumerGroup: ConsumerGroups;
   data: any;
 }
+
+if (!process.env.PUBLISH_KEY)
+  throw new Error('No publish key defined in environment variables');
 
 export abstract class Publisher<T extends Event> {
   abstract consumerGroup: T['consumerGroup'];
