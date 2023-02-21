@@ -15,9 +15,6 @@ interface Event {
   data: any;
 }
 
-if (!process.env.PUBLISH_KEY)
-  throw new Error('No publish key defined in environment variables');
-
 export abstract class Publisher<T extends Event> {
   abstract consumerGroup: T['consumerGroup'];
 
