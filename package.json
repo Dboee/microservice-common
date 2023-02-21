@@ -1,6 +1,6 @@
 {
   "name": "@delight-system/microservice-common",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "testing to see if it updates.",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
