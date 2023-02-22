@@ -14,13 +14,9 @@ const event_hubs_1 = require("@azure/event-hubs");
 class Publisher {
     constructor(eventHubName, consumerGroup) {
         // Client Setup
-        // this.eventHubsResourceName = EVENT_HUBS_RESOURCE_NAME;
-        // this.fullyQualifiedNamespace = `${this.eventHubsResourceName}.servicebus.windows.net`;
-        // this.credential = new DefaultAzureCredential();
         if (!process.env.PUBLISH_KEY)
             throw new Error('No connection string defined for event hub');
         this.credentialString = process.env.PUBLISH_KEY;
-        console.log('EVENT_HUBS_NAMESPACE_CONNECTION_STRING:', this.credentialString);
         this.client = this.setConsumerClient(eventHubName, consumerGroup);
     }
     setConsumerClient(eventHubName, consumerGroup) {

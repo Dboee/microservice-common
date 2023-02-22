@@ -11,8 +11,10 @@ declare abstract class Listener<T extends Event> {
     abstract onMessage(data: T['data'], context: PartitionContext, event: ReceivedEventData): void;
     abstract eventHubName: EventHubs;
     abstract consumerGroup: T['consumerGroup'];
-    private baseUrl;
-    private credential;
+    private hubsCredentialString;
+    private storageCredentialString;
+    private containerName;
+    private containerClient;
     private checkpointStore;
     private client;
     constructor(eventHubName: EventHubs, consumerGroup: T['consumerGroup']);
