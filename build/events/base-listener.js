@@ -14,7 +14,6 @@ const identity_1 = require("@azure/identity");
 const event_hubs_1 = require("@azure/event-hubs");
 const storage_blob_1 = require("@azure/storage-blob");
 const eventhubs_checkpointstore_blob_1 = require("@azure/eventhubs-checkpointstore-blob");
-// Azure props
 const EVENT_HUBS_RESOURCE_NAME = 'microservice-namespace';
 const STORAGE_ACCOUNT_NAME = 'microservicestorageacc';
 const STORAGE_CONTAINER_NAME = 'eventhub-container';

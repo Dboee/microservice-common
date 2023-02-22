@@ -4,8 +4,6 @@ import { DefaultAzureCredential } from '@azure/identity';
 import { ConsumerGroups } from './consumer-groups';
 import { EventHubs } from './event-hubs';
 
-const EVENT_HUBS_RESOURCE_NAME = 'microservice-namespace';
-
 interface Event {
   consumerGroup: ConsumerGroups;
   data: any;
@@ -16,17 +14,26 @@ export abstract class Publisher<T extends Event> {
 
   // Azure Spesific
   abstract eventHubName: EventHubs;
-  private eventHubsResourceName: string;
-  private fullyQualifiedNamespace: string;
-  private credential: DefaultAzureCredential;
+  private credentialString: string;
+  // private eventHubsResourceName: string;
+  // private fullyQualifiedNamespace: string;
+  // private credential: DefaultAzureCredential;
 
   private client: EventHubProducerClient;
 
   constructor(eventHubName: EventHubs, consumerGroup: T['consumerGroup']) {
     // Client Setup
-    this.eventHubsResourceName = EVENT_HUBS_RESOURCE_NAME;
-    this.fullyQualifiedNamespace = `${this.eventHubsResourceName}.servicebus.windows.net`;
-    this.credential = new DefaultAzureCredential();
+    // this.eventHubsResourceName = EVENT_HUBS_RESOURCE_NAME;
+    // this.fullyQualifiedNamespace = `${this.eventHubsResourceName}.servicebus.windows.net`;
+    // this.credential = new DefaultAzureCredential();
+
+    if (!process.env.PUBLISH_KEY)
+      throw new Error('No connection string defined for event hub');
+    this.credentialString = process.env.PUBLISH_KEY;
+    console.log(
+      'EVENT_HUBS_NAMESPACE_CONNECTION_STRING:',
+      this.credentialString
+    );
 
     this.client = this.setConsumerClient(eventHubName, consumerGroup);
   }
@@ -35,11 +42,7 @@ export abstract class Publisher<T extends Event> {
     eventHubName: EventHubs,
     consumerGroup: T['consumerGroup']
   ) {
-    return new EventHubProducerClient(
-      this.fullyQualifiedNamespace,
-      eventHubName,
-      this.credential
-    );
+    return new EventHubProducerClient(this.credentialString, eventHubName);
   }
 
   async publish(data: T['data']) {

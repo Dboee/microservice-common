@@ -1,4 +1,4 @@
-import { EventHubConsumerClient, EventData, ReceivedEventData, PartitionContext } from '@azure/event-hubs';
+import { EventData, ReceivedEventData, PartitionContext } from '@azure/event-hubs';
 import { ConsumerGroups } from './consumer-groups';
 import { EventHubs } from './event-hubs';
 interface Event {
@@ -16,7 +16,7 @@ declare abstract class Listener<T extends Event> {
     private checkpointStore;
     private client;
     constructor(eventHubName: EventHubs, consumerGroup: T['consumerGroup']);
-    protected setConsumerClient(eventHubName: EventHubs, consumerGroup: T['consumerGroup']): EventHubConsumerClient;
+    private setConsumerClient;
     parseMessage(event: EventData): any;
     listen(): Promise<void>;
 }
