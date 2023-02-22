@@ -6,10 +6,6 @@ import { EventHubs } from './event-hubs';
 
 const EVENT_HUBS_RESOURCE_NAME = 'microservice-namespace';
 
-// Event hubs
-// This variable refers to the name of the Azure resource
-// that the Event Hub belongs to.
-
 interface Event {
   consumerGroup: ConsumerGroups;
   data: any;
@@ -22,20 +18,14 @@ export abstract class Publisher<T extends Event> {
   abstract eventHubName: EventHubs;
   private eventHubsResourceName: string;
   private fullyQualifiedNamespace: string;
-  // private credential: string;
   private credential: DefaultAzureCredential;
 
   private client: EventHubProducerClient;
 
   constructor(eventHubName: EventHubs, consumerGroup: T['consumerGroup']) {
     // Client Setup
-
     this.eventHubsResourceName = EVENT_HUBS_RESOURCE_NAME;
     this.fullyQualifiedNamespace = `${this.eventHubsResourceName}.servicebus.windows.net`;
-    console.log('PUBLISH_KEY: ', process.env.PUBLISH_KEY);
-    if (!process.env.PUBLISH_KEY)
-      throw new Error('No publish key defined in environment variables');
-    // this.credential = process.env.PUBLISH_KEY;
     this.credential = new DefaultAzureCredential();
 
     this.client = this.setConsumerClient(eventHubName, consumerGroup);

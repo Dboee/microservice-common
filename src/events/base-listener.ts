@@ -1,4 +1,7 @@
-import { DefaultAzureCredential } from '@azure/identity';
+import {
+  ChainedTokenCredential,
+  DefaultAzureCredential,
+} from '@azure/identity';
 import {
   EventHubConsumerClient,
   earliestEventPosition,
@@ -12,7 +15,6 @@ import { BlobCheckpointStore } from '@azure/eventhubs-checkpointstore-blob';
 import { ConsumerGroups } from './consumer-groups';
 import { EventHubs } from './event-hubs';
 
-// Azure props
 const EVENT_HUBS_RESOURCE_NAME = 'microservice-namespace';
 const STORAGE_ACCOUNT_NAME = 'microservicestorageacc';
 const STORAGE_CONTAINER_NAME = 'eventhub-container';
@@ -21,14 +23,12 @@ interface Event {
   data: any;
   subject: ConsumerGroups;
   consumerGroup: ConsumerGroups;
-  // properties: {
-  // };
 }
 
 // An abstract class in TypeScript is a class that cannot be
 // instantiated directly. It can only be used as a base class for other classes.
 abstract class Listener<T extends Event> {
-  // These properties must be defined in the child class
+  // These abstract properties must be defined in the child class
   abstract subject: T['subject'];
   abstract onMessage(
     data: T['data'],
@@ -41,7 +41,7 @@ abstract class Listener<T extends Event> {
 
   // These properties are defined here
   private baseUrl: string;
-  private credential: DefaultAzureCredential;
+  private credential: ChainedTokenCredential;
   private checkpointStore: BlobCheckpointStore;
   private client: EventHubConsumerClient;
 
@@ -60,9 +60,10 @@ abstract class Listener<T extends Event> {
     );
     this.client = this.setConsumerClient(eventHubName, consumerGroup);
   }
+
   // protected member is accessible from the class
   // itself and its subclasses but not from the outside world
-  protected setConsumerClient(
+  private setConsumerClient(
     eventHubName: EventHubs,
     consumerGroup: T['consumerGroup']
   ) {
