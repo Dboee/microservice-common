@@ -19,3 +19,6 @@ export * from './events/consumer-groups';
 export * from './events/event-hubs';
 export * from './events/tickets/ticket-created-event';
 export * from './events/tickets/ticket-updated-event';
+
+//  types
+export * from './events/types/order-status';
