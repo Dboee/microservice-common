@@ -5,8 +5,8 @@ var ConsumerGroups;
 (function (ConsumerGroups) {
     ConsumerGroups["TicketCreated"] = "ticket-created";
     ConsumerGroups["TicketUpdated"] = "ticket-updated";
-    // OrderCreated = 'order-created',
-    // OrderCancelled = 'order-cancelled',
+    ConsumerGroups["OrderCreated"] = "order-created";
+    ConsumerGroups["OrderCancelled"] = "order-cancelled";
     // ExpirationComplete = 'expiration-complete',
     // PaymentCreated = 'payment-created',
 })(ConsumerGroups = exports.ConsumerGroups || (exports.ConsumerGroups = {}));
