@@ -1,11 +1,11 @@
 import { EventData, EventHubProducerClient } from '@azure/event-hubs';
-import { DefaultAzureCredential } from '@azure/identity';
 
 import { ConsumerGroups } from './consumer-groups';
 import { EventHubs } from './event-hubs';
 
 interface Event {
   consumerGroup: ConsumerGroups;
+  eventHubName: EventHubs;
   data: any;
 }
 
@@ -13,13 +13,17 @@ export abstract class Publisher<T extends Event> {
   abstract consumerGroup: T['consumerGroup'];
 
   // Azure Spesific
-  abstract eventHubName: EventHubs;
+  abstract eventHubName: T['eventHubName'];
   private credentialString: string;
 
   private client: EventHubProducerClient;
 
-  constructor(eventHubName: EventHubs, consumerGroup: T['consumerGroup']) {
+  constructor(
+    eventHubName: T['eventHubName'],
+    consumerGroup: T['consumerGroup']
+  ) {
     // Client Setup
+    console.log('Publish Key: ', process.env.PUBLISH_KEY);
     if (!process.env.PUBLISH_KEY)
       throw new Error('No connection string defined for event hub');
     this.credentialString = process.env.PUBLISH_KEY;
@@ -28,7 +32,7 @@ export abstract class Publisher<T extends Event> {
   }
 
   protected setConsumerClient(
-    eventHubName: EventHubs,
+    eventHubName: T['eventHubName'],
     consumerGroup: T['consumerGroup']
   ) {
     return new EventHubProducerClient(this.credentialString, eventHubName);

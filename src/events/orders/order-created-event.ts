@@ -3,7 +3,7 @@ import { EventHubs } from '../event-hubs';
 
 export interface IOrderCreatedEvent {
   consumerGroup: ConsumerGroups.OrderCreated;
-  eventHub: EventHubs.Orders;
+  eventHubName: EventHubs.Orders;
   data: {
     id: string;
     status: string;
