@@ -10,7 +10,7 @@
   "scripts": {
     "clean": "del-cli ./build/*",
     "build": "npm run clean && tsc -p tsconfig.json",
-    "pub": "git add . && node publish.js"
+    "pub": "node publish.js"
   },
   "keywords": [],
   "author": "",

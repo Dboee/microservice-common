@@ -10,7 +10,7 @@ prompt.get(['commitMessage'], function (err, result) {
   console.log('Commit message:', result.commitMessage);
 
   exec(
-    `git commit -m "${result.commitMessage}" && npm version patch && npm run build && npm publish && git push`,
+    `git add . && git commit -m "${result.commitMessage}" && npm version patch && npm run build && npm publish && git add . && git push`,
     (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);

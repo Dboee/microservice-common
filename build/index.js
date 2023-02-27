@@ -33,5 +33,7 @@ __exportStar(require("./events/consumer-groups"), exports);
 __exportStar(require("./events/event-hubs"), exports);
 __exportStar(require("./events/tickets/ticket-created-event"), exports);
 __exportStar(require("./events/tickets/ticket-updated-event"), exports);
+__exportStar(require("./events/orders/order-created-event"), exports);
+__exportStar(require("./events/orders/order-cancelled-event"), exports);
 //  types
 __exportStar(require("./events/types/order-status"), exports);
