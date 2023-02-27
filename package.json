@@ -1,6 +1,6 @@
 {
   "name": "@delight-system/microservice-common",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Common microservice module.",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
