@@ -83,11 +83,16 @@ abstract class Listener<T extends Event> {
 
   // Define a method that can be called to start the listener
   async listen() {
-    console.log('Listener conntected to Azure Event Hub');
+    console.log(
+      'Listener conntected to:',
+      this.eventHubName,
+      ' : ',
+      this.consumerGroup
+    );
     this.client.subscribe(
       {
         processEvents: async (events, context) => {
-          if (events.length === 0) return console.log('No events to process.');
+          // if (events.length === 0) return console.log('No events to process.');
 
           for (const event of events) {
             const parsedData = this.parseMessage(event);
