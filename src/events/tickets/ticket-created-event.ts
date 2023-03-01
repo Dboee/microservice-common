@@ -3,7 +3,7 @@ import { EventHubs } from '../event-hubs';
 
 export interface ITicketCreatedEvent {
   consumerGroup: ConsumerGroups.TicketCreated;
-  eventHub: EventHubs.Tickets;
+  eventHubName: EventHubs.Tickets;
   data: {
     id: string;
     title: string;

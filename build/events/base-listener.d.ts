@@ -3,13 +3,12 @@ import { ConsumerGroups } from './consumer-groups';
 import { EventHubs } from './event-hubs';
 interface Event {
     data: any;
-    subject: ConsumerGroups;
+    eventHubName: EventHubs;
     consumerGroup: ConsumerGroups;
 }
 declare abstract class Listener<T extends Event> {
-    abstract subject: T['subject'];
     abstract onMessage(data: T['data'], context: PartitionContext, event: ReceivedEventData): void;
-    abstract eventHubName: EventHubs;
+    abstract eventHubName: T['eventHubName'];
     abstract consumerGroup: T['consumerGroup'];
     private hubsCredentialString;
     private storageCredentialString;
@@ -17,7 +16,7 @@ declare abstract class Listener<T extends Event> {
     private containerClient;
     private checkpointStore;
     private client;
-    constructor(eventHubName: EventHubs, consumerGroup: T['consumerGroup']);
+    constructor(eventHubName: T['eventHubName'], consumerGroup: T['consumerGroup']);
     private setConsumerClient;
     parseMessage(event: EventData): any;
     listen(): Promise<void>;
