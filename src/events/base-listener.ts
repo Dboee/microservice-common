@@ -13,7 +13,7 @@ import { EventHubs } from './event-hubs';
 
 interface Event {
   data: any;
-  subject: ConsumerGroups;
+  eventHubName: EventHubs;
   consumerGroup: ConsumerGroups;
 }
 
@@ -21,14 +21,13 @@ interface Event {
 // instantiated directly. It can only be used as a base class for other classes.
 abstract class Listener<T extends Event> {
   // These abstract properties must be defined in the child class
-  abstract subject: T['subject'];
   abstract onMessage(
     data: T['data'],
     context: PartitionContext,
     event: ReceivedEventData
   ): void;
   // Azure specific properties
-  abstract eventHubName: EventHubs; // Azure Event Hub name
+  abstract eventHubName: T['eventHubName']; // Azure Event Hub name
   abstract consumerGroup: T['consumerGroup']; // Azure Event Hub consumer group
 
   // These properties are defined here
@@ -40,7 +39,10 @@ abstract class Listener<T extends Event> {
   private client: EventHubConsumerClient;
 
   // The constructor is called when the class is instantiated
-  constructor(eventHubName: EventHubs, consumerGroup: T['consumerGroup']) {
+  constructor(
+    eventHubName: T['eventHubName'],
+    consumerGroup: T['consumerGroup']
+  ) {
     console.clear();
 
     // Client Setup
@@ -62,7 +64,7 @@ abstract class Listener<T extends Event> {
   }
 
   private setConsumerClient(
-    eventHubName: EventHubs,
+    eventHubName: T['eventHubName'],
     consumerGroup: T['consumerGroup']
   ) {
     return new EventHubConsumerClient(
