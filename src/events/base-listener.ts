@@ -80,6 +80,21 @@ abstract class Listener<T extends Event> {
     const data = event.body;
     return data;
   }
+  // Method to process the event data
+  private async CustomProcessEvent(
+    event: ReceivedEventData,
+    context: PartitionContext
+  ) {
+    const consumerGroup = event.properties?.consumerGroup;
+
+    if (!consumerGroup || consumerGroup !== this.consumerGroup) {
+      // Skip processing if consumer group doesn't match
+      return;
+    }
+
+    const parsedData = this.parseMessage(event);
+    await this.onMessage(parsedData, context, event);
+  }
 
   // Define a method that can be called to start the listener
   async listen() {
@@ -93,17 +108,8 @@ abstract class Listener<T extends Event> {
       {
         processEvents: async (events, context) => {
           for (const event of events) {
-            const parsedData = this.parseMessage(event);
-            this.onMessage(parsedData, context, event);
+            await this.CustomProcessEvent(event, context);
           }
-
-          if (events.length === 0) {
-            // If the wait time expires (configured via options in maxWaitTimeInSeconds) Event Hubs
-            // will pass you an empty array.
-            return;
-          }
-          // Update the checkpoint
-          await context.updateCheckpoint(events[events.length - 1]);
         },
         processError: async (err, context) => {
           console.log(`Subscription processError : ${err}`);

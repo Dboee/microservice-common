@@ -45,14 +45,17 @@ class Listener {
             console.log('Listener conntected to:', this.eventHubName, ' : ', this.consumerGroup);
             this.client.subscribe({
                 processEvents: (events, context) => __awaiter(this, void 0, void 0, function* () {
-                    if (events.length > 0) {
-                        for (const event of events) {
-                            const parsedData = this.parseMessage(event);
-                            this.onMessage(parsedData, context, event);
-                        }
-                        // Update the checkpoint
-                        yield context.updateCheckpoint(events[events.length - 1]);
+                    for (const event of events) {
+                        const parsedData = this.parseMessage(event);
+                        this.onMessage(parsedData, context, event);
                     }
+                    if (events.length === 0) {
+                        // If the wait time expires (configured via options in maxWaitTimeInSeconds) Event Hubs
+                        // will pass you an empty array.
+                        return;
+                    }
+                    // Update the checkpoint
+                    yield context.updateCheckpoint(events[events.length - 1]);
                 }),
                 processError: (err, context) => __awaiter(this, void 0, void 0, function* () {
                     console.log(`Subscription processError : ${err}`);
