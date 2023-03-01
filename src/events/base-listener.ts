@@ -92,14 +92,15 @@ abstract class Listener<T extends Event> {
     this.client.subscribe(
       {
         processEvents: async (events, context) => {
-          // if (events.length === 0) return console.log('No events to process.');
-
-          for (const event of events) {
-            const parsedData = this.parseMessage(event);
-            this.onMessage(parsedData, context, event);
+          if (events.length > 0) {
+            for (const event of events) {
+              const parsedData = this.parseMessage(event);
+              this.onMessage(parsedData, context, event);
+            }
+            // Update the checkpoint
+            await context.updateCheckpoint(events[events.length - 1]);
           }
-
-          await context.updateCheckpoint(events[events.length - 1]);
+          return;
         },
         processError: async (err, context) => {
           console.log(`Subscription processError : ${err}`);
