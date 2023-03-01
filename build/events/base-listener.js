@@ -53,7 +53,6 @@ class Listener {
                         // Update the checkpoint
                         yield context.updateCheckpoint(events[events.length - 1]);
                     }
-                    return;
                 }),
                 processError: (err, context) => __awaiter(this, void 0, void 0, function* () {
                     console.log(`Subscription processError : ${err}`);

@@ -92,14 +92,18 @@ abstract class Listener<T extends Event> {
     this.client.subscribe(
       {
         processEvents: async (events, context) => {
-          if (events.length > 0) {
-            for (const event of events) {
-              const parsedData = this.parseMessage(event);
-              this.onMessage(parsedData, context, event);
-            }
-            // Update the checkpoint
-            await context.updateCheckpoint(events[events.length - 1]);
+          for (const event of events) {
+            const parsedData = this.parseMessage(event);
+            this.onMessage(parsedData, context, event);
           }
+
+          if (events.length === 0) {
+            // If the wait time expires (configured via options in maxWaitTimeInSeconds) Event Hubs
+            // will pass you an empty array.
+            return;
+          }
+          // Update the checkpoint
+          await context.updateCheckpoint(events[events.length - 1]);
         },
         processError: async (err, context) => {
           console.log(`Subscription processError : ${err}`);
