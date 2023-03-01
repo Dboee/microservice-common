@@ -1,7 +1,3 @@
-/**
- * This event is emitted when an order is cancelled.
- */
-
 // Import the event hubs namespace
 import { EventHubs } from '../event-hubs';
 // Import the consumer group for this event
