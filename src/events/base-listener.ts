@@ -100,7 +100,6 @@ abstract class Listener<T extends Event> {
             // Update the checkpoint
             await context.updateCheckpoint(events[events.length - 1]);
           }
-          return;
         },
         processError: async (err, context) => {
           console.log(`Subscription processError : ${err}`);
