@@ -19,6 +19,7 @@ declare abstract class Listener<T extends Event> {
     constructor(eventHubName: T['eventHubName'], consumerGroup: T['consumerGroup']);
     private setConsumerClient;
     parseMessage(event: EventData): any;
+    private CustomProcessEvent;
     listen(): Promise<void>;
 }
 export { Listener };

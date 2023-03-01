@@ -39,6 +39,19 @@ class Listener {
         const data = event.body;
         return data;
     }
+    // Method to process the event data
+    CustomProcessEvent(event, context) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const consumerGroup = (_a = event.properties) === null || _a === void 0 ? void 0 : _a.consumerGroup;
+            if (!consumerGroup || consumerGroup !== this.consumerGroup) {
+                // Skip processing if consumer group doesn't match
+                return;
+            }
+            const parsedData = this.parseMessage(event);
+            yield this.onMessage(parsedData, context, event);
+        });
+    }
     // Define a method that can be called to start the listener
     listen() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -46,16 +59,8 @@ class Listener {
             this.client.subscribe({
                 processEvents: (events, context) => __awaiter(this, void 0, void 0, function* () {
                     for (const event of events) {
-                        const parsedData = this.parseMessage(event);
-                        this.onMessage(parsedData, context, event);
+                        yield this.CustomProcessEvent(event, context);
                     }
-                    if (events.length === 0) {
-                        // If the wait time expires (configured via options in maxWaitTimeInSeconds) Event Hubs
-                        // will pass you an empty array.
-                        return;
-                    }
-                    // Update the checkpoint
-                    yield context.updateCheckpoint(events[events.length - 1]);
                 }),
                 processError: (err, context) => __awaiter(this, void 0, void 0, function* () {
                     console.log(`Subscription processError : ${err}`);
