@@ -14,8 +14,6 @@ const event_hubs_1 = require("@azure/event-hubs");
 class Publisher {
     constructor(eventHubName, consumerGroup) {
         // Client Setup
-        console.log('Publish Key: ', process.env.PUBLISH_KEY);
-        console.log('Listen Key: ', process.env.LISTEN_KEY);
         if (!process.env.PUBLISH_KEY)
             throw new Error('No connection string defined for event hub');
         this.credentialString = process.env.PUBLISH_KEY;
