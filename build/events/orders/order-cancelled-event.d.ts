@@ -5,6 +5,7 @@ export interface IOrderCancelledEvent {
     eventHubName: EventHubs.Orders;
     data: {
         id: string;
+        version: number;
         ticket: {
             id: string;
         };
