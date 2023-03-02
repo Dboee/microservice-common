@@ -6,6 +6,7 @@ export interface ITicketUpdatedEvent {
   eventHubName: EventHubs.Tickets;
   data: {
     id: string;
+    version: number;
     title: string;
     price: number;
     userId: string;

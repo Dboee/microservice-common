@@ -12,6 +12,7 @@ export interface IOrderCancelledEvent {
   // Define the data payload
   data: {
     id: string;
+    version: number;
     ticket: {
       id: string;
     };

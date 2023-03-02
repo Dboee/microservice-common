@@ -6,6 +6,7 @@ export interface IOrderCreatedEvent {
   eventHubName: EventHubs.Orders;
   data: {
     id: string;
+    version: number;
     status: string;
     userId: string;
     expiresAt: string;
