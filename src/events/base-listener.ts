@@ -94,6 +94,9 @@ abstract class Listener<T extends Event> {
 
     const parsedData = this.parseMessage(event);
     await this.onMessage(parsedData, context, event);
+
+    // Acknowledge the event
+    await context.updateCheckpoint(event);
   }
 
   // Define a method that can be called to start the listener
