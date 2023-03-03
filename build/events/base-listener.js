@@ -50,6 +50,8 @@ class Listener {
             }
             const parsedData = this.parseMessage(event);
             yield this.onMessage(parsedData, context, event);
+            // Acknowledge the event
+            yield context.updateCheckpoint(event);
         });
     }
     // Define a method that can be called to start the listener
