@@ -10,5 +10,6 @@ export interface ITicketCreatedEvent {
     title: string;
     price: number;
     userId: string;
+    orderId?: string;
   };
 }
