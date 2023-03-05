@@ -9,5 +9,6 @@ export interface ITicketUpdatedEvent {
         title: string;
         price: number;
         userId: string;
+        orderId?: string;
     };
 }
