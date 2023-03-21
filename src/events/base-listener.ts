@@ -10,10 +10,13 @@ import { BlobCheckpointStore } from '@azure/eventhubs-checkpointstore-blob';
 
 import { ConsumerGroups } from './consumer-groups';
 import { EventHubs } from './event-hubs';
+import { Subjects } from './types/subjects';
 
 interface Event {
+  properties: {
+    subject: Subjects;
+  };
   data: any;
-  eventHubName: EventHubs;
   consumerGroup: ConsumerGroups;
 }
 
@@ -21,59 +24,57 @@ interface Event {
 // instantiated directly. It can only be used as a base class for other classes.
 abstract class Listener<T extends Event> {
   // These abstract properties must be defined in the child class
+  abstract subject: T['data']['properties']['subject'];
+  abstract consumerGroup: T['consumerGroup'];
   abstract onMessage(
     data: T['data'],
     context: PartitionContext,
     event: ReceivedEventData
   ): void;
-  // Azure specific properties
-  abstract eventHubName: T['eventHubName']; // Azure Event Hub name
-  abstract consumerGroup: T['consumerGroup']; // Azure Event Hub consumer group
 
   // These properties are defined here
-  private hubsCredentialString: string;
-  private storageCredentialString: string;
-  private containerName: string;
-  private containerClient: ContainerClient;
-  private checkpointStore: BlobCheckpointStore;
-  private client: EventHubConsumerClient;
+  // private hubsCredentialString: string;
+  // private storageCredentialString: string;
+  // private containerName: string;
+  // private containerClient: ContainerClient;
+  // private checkpointStore: BlobCheckpointStore;
+
+  protected client: EventHubConsumerClient;
 
   // The constructor is called when the class is instantiated
-  constructor(
-    eventHubName: T['eventHubName'],
-    consumerGroup: T['consumerGroup']
-  ) {
-    console.clear();
+  constructor(client: EventHubConsumerClient) {
+    // sets the client property
+    this.client = client;
 
     // Client Setup
-    if (!process.env.LISTEN_KEY)
-      throw new Error('LISTEN_KEY is not available in the environment');
-    this.hubsCredentialString = process.env.LISTEN_KEY;
-    if (!process.env.STORAGE_KEY)
-      throw new Error('STORAGE_KEY is not available in the environment');
-    this.storageCredentialString = process.env.STORAGE_KEY;
-    this.containerName = 'eventhub-container'; // Get this from Azure Portal
+    // if (!process.env.LISTEN_KEY)
+    //   throw new Error('LISTEN_KEY is not available in the environment');
+    // this.hubsCredentialString = process.env.LISTEN_KEY;
+    // if (!process.env.STORAGE_KEY)
+    //   throw new Error('STORAGE_KEY is not available in the environment');
+    // this.storageCredentialString = process.env.STORAGE_KEY;
+    // this.containerName = 'eventhub-container'; // Get this from Azure Portal
 
-    this.containerClient = new ContainerClient(
-      this.storageCredentialString,
-      this.containerName
-    );
-    this.checkpointStore = new BlobCheckpointStore(this.containerClient);
+    // this.containerClient = new ContainerClient(
+    //   this.storageCredentialString,
+    //   this.containerName
+    // );
+    // this.checkpointStore = new BlobCheckpointStore(this.containerClient);
 
-    this.client = this.setConsumerClient(eventHubName, consumerGroup);
+    // this.client = this.setConsumerClient(eventHubName, consumerGroup);
   }
 
-  private setConsumerClient(
-    eventHubName: T['eventHubName'],
-    consumerGroup: T['consumerGroup']
-  ) {
-    return new EventHubConsumerClient(
-      consumerGroup,
-      this.hubsCredentialString,
-      eventHubName,
-      this.checkpointStore
-    );
-  }
+  // private setConsumerClient(
+  //   eventHubName: T['eventHubName'],
+  //   consumerGroup: T['consumerGroup']
+  // ) {
+  //   return new EventHubConsumerClient(
+  //     consumerGroup,
+  //     this.hubsCredentialString,
+  //     eventHubName,
+  //     this.checkpointStore
+  //   );
+  // }
 
   // Method to parse the event data into a JSON object
   parseMessage(event: EventData) {
@@ -85,10 +86,13 @@ abstract class Listener<T extends Event> {
     event: ReceivedEventData,
     context: PartitionContext
   ) {
-    const consumerGroup = event.properties?.consumerGroup;
+    const subject = event.properties?.subject;
 
-    if (!consumerGroup || consumerGroup !== this.consumerGroup) {
+    if (!subject || subject !== this.consumerGroup) {
       // Skip processing if consumer group doesn't match
+      console.log(
+        `Skipping event with subject: ${subject} and consumer group: ${this.consumerGroup}`
+      );
       return;
     }
 
@@ -96,17 +100,12 @@ abstract class Listener<T extends Event> {
     await this.onMessage(parsedData, context, event);
 
     // Acknowledge the event
-    await context.updateCheckpoint(event);
+    // await context.updateCheckpoint(event);
   }
 
   // Define a method that can be called to start the listener
   async listen() {
-    console.log(
-      'Listener conntected to:',
-      this.eventHubName,
-      ' : ',
-      this.consumerGroup
-    );
+    console.log('Listener conntected to:', this.consumerGroup);
     this.client.subscribe(
       {
         processEvents: async (events, context) => {

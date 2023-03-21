@@ -8,3 +8,11 @@ export enum EventHubs {
   Orders = 'orders-service',
   Expiration = 'expiration-service',
 }
+
+export enum EventTypes {
+  TicketCreated = 'ticket-created',
+  TicketUpdated = 'ticket-updated',
+  OrderCreated = 'order-created',
+  OrderCancelled = 'order-cancelled',
+  ExpirationComplete = 'expiration-complete',
+}

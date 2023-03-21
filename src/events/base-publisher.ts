@@ -1,57 +1,47 @@
 import { EventData, EventHubProducerClient } from '@azure/event-hubs';
 
-import { ConsumerGroups } from './consumer-groups';
-import { EventHubs } from './event-hubs';
+import { EventHubs, EventTypes } from './event-hubs';
+import { Subjects } from './types/subjects';
 
-interface Event {
-  consumerGroup: ConsumerGroups;
-  eventHubName: EventHubs;
-  data: any;
+interface EventInterface {
+  data: {
+    properties: {
+      subject: Subjects;
+    };
+  };
 }
 
-export abstract class Publisher<T extends Event> {
-  abstract consumerGroup: T['consumerGroup'];
-
+export abstract class Publisher<T extends EventInterface> {
   // Azure Spesific
-  abstract eventHubName: T['eventHubName'];
-  private credentialString: string;
+  abstract subject: T['data']['properties']['subject'];
+  // private credentialString: string;
+  protected client: EventHubProducerClient;
 
-  private client: EventHubProducerClient;
-
-  constructor(
-    eventHubName: T['eventHubName'],
-    consumerGroup: T['consumerGroup']
-  ) {
-    // Client Setup
-    if (!process.env.PUBLISH_KEY)
-      throw new Error('No connection string defined for event hub');
-    this.credentialString = process.env.PUBLISH_KEY;
-
-    this.client = this.setConsumerClient(eventHubName, consumerGroup);
+  constructor(client: EventHubProducerClient) {
+    // sets the client property
+    this.client = client;
   }
 
-  protected setConsumerClient(
-    eventHubName: T['eventHubName'],
-    consumerGroup: T['consumerGroup']
-  ) {
-    return new EventHubProducerClient(this.credentialString, eventHubName);
-  }
-
+  // Publishes an event to the event hub
   async publish(data: T['data']) {
+    // Create a batch object.
     const batch = await this.client.createBatch();
+    // Create an message(event) object.
     const message: EventData = {
       body: data,
       properties: {
-        consumerGroup: this.consumerGroup,
+        subject: this.subject,
       },
     };
 
+    // Validates that the message has properties and a subject.
     if (!message.properties) throw new Error('No property defined in event');
-    if (!message.properties.consumerGroup)
-      throw new Error('No consumerGroup defined in event');
-
+    if (!message.properties.subject)
+      throw new Error('No subject defined in event');
+    // Add the message to the batch.
     batch.tryAdd(message);
 
+    // Send the batch to the event hub.
     try {
       await this.client.sendBatch(batch);
     } catch (error: any) {
@@ -59,11 +49,9 @@ export abstract class Publisher<T extends Event> {
       throw new Error(error);
     }
 
+    // Console logs the plublished event
+    console.log(`Event Published:`, message);
     // Close the producer client.
     await this.client.close();
-
-    console.log(
-      `Event Published to ${this.eventHubName}:${message.properties.consumerGroup}`
-    );
   }
 }

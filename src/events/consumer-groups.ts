@@ -1,17 +1,21 @@
 export enum ConsumerGroups {
-  TicketCreated = 'ticket-created',
-  TicketUpdated = 'ticket-updated',
-  OrderCreated = 'order-created',
-  OrderCancelled = 'order-cancelled',
-  // ExpirationComplete = 'expiration-complete',
-  // PaymentCreated = 'payment-created',
+  Ticketing = 'ticketing',
+  Payments = 'payments',
+  Expiration = 'expiration',
+  Orders = 'orders',
 }
 
-export enum PartitionKeys {
-  TicketCreated = 'ticket-created',
-  TicketUpdated = 'ticket-updated',
-  OrderCreated = 'order-created',
-  OrderCancelled = 'order-cancelled',
-  // ExpirationComplete = 'expiration-complete',
-  // PaymentCreated = 'payment-created',
+export enum Ticketing {
+  OrdersListener = 'orders-listener',
+}
+
+export enum Payments {}
+
+export enum Expiration {
+  OrdersListener = 'orders-listener',
+}
+
+export enum Orders {
+  ExpirationListener = 'expiration-listener',
+  TicketsListener = 'tickets-listener',
 }

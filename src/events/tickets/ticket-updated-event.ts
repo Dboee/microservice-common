@@ -1,9 +1,11 @@
 import { ConsumerGroups } from '../consumer-groups';
 import { EventHubs } from '../event-hubs';
+import { Subjects } from '../types/subjects';
 
 export interface ITicketUpdatedEvent {
-  consumerGroup: ConsumerGroups.TicketUpdated;
-  eventHubName: EventHubs.Tickets;
+  properties: {
+    subject: Subjects.TicketUpdated;
+  };
   data: {
     id: string;
     version: number;
