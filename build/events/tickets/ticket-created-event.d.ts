@@ -1,8 +1,5 @@
 import { Subjects } from '../types/subjects';
 export interface ITicketCreatedEvent {
-    properties: {
-        subject: Subjects.TicketCreated;
-    };
     data: {
         id: string;
         version: number;
@@ -10,5 +7,8 @@ export interface ITicketCreatedEvent {
         price: number;
         userId: string;
         orderId?: string;
+        properties: {
+            subject: Subjects.TicketCreated;
+        };
     };
 }

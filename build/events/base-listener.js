@@ -18,32 +18,7 @@ class Listener {
     constructor(client) {
         // sets the client property
         this.client = client;
-        // Client Setup
-        // if (!process.env.LISTEN_KEY)
-        //   throw new Error('LISTEN_KEY is not available in the environment');
-        // this.hubsCredentialString = process.env.LISTEN_KEY;
-        // if (!process.env.STORAGE_KEY)
-        //   throw new Error('STORAGE_KEY is not available in the environment');
-        // this.storageCredentialString = process.env.STORAGE_KEY;
-        // this.containerName = 'eventhub-container'; // Get this from Azure Portal
-        // this.containerClient = new ContainerClient(
-        //   this.storageCredentialString,
-        //   this.containerName
-        // );
-        // this.checkpointStore = new BlobCheckpointStore(this.containerClient);
-        // this.client = this.setConsumerClient(eventHubName, consumerGroup);
     }
-    // private setConsumerClient(
-    //   eventHubName: T['eventHubName'],
-    //   consumerGroup: T['consumerGroup']
-    // ) {
-    //   return new EventHubConsumerClient(
-    //     consumerGroup,
-    //     this.hubsCredentialString,
-    //     eventHubName,
-    //     this.checkpointStore
-    //   );
-    // }
     // Method to parse the event data into a JSON object
     parseMessage(event) {
         const data = event.body;
