@@ -24,3 +24,4 @@ export * from './events/orders/order-cancelled-event';
 
 //  types
 export * from './events/types/order-status';
+export * from './events/types/subjects';
