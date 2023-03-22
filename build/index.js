@@ -37,3 +37,4 @@ __exportStar(require("./events/orders/order-created-event"), exports);
 __exportStar(require("./events/orders/order-cancelled-event"), exports);
 //  types
 __exportStar(require("./events/types/order-status"), exports);
+__exportStar(require("./events/types/subjects"), exports);
