@@ -11,29 +11,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Listener = void 0;
 const event_hubs_1 = require("@azure/event-hubs");
-const storage_blob_1 = require("@azure/storage-blob");
-const eventhubs_checkpointstore_blob_1 = require("@azure/eventhubs-checkpointstore-blob");
 // An abstract class in TypeScript is a class that cannot be
 // instantiated directly. It can only be used as a base class for other classes.
 class Listener {
     // The constructor is called when the class is instantiated
-    constructor(eventHubName, consumerGroup) {
-        console.clear();
+    constructor(client) {
+        // sets the client property
+        this.client = client;
         // Client Setup
-        if (!process.env.LISTEN_KEY)
-            throw new Error('LISTEN_KEY is not available in the environment');
-        this.hubsCredentialString = process.env.LISTEN_KEY;
-        if (!process.env.STORAGE_KEY)
-            throw new Error('STORAGE_KEY is not available in the environment');
-        this.storageCredentialString = process.env.STORAGE_KEY;
-        this.containerName = 'eventhub-container'; // Get this from Azure Portal
-        this.containerClient = new storage_blob_1.ContainerClient(this.storageCredentialString, this.containerName);
-        this.checkpointStore = new eventhubs_checkpointstore_blob_1.BlobCheckpointStore(this.containerClient);
-        this.client = this.setConsumerClient(eventHubName, consumerGroup);
+        // if (!process.env.LISTEN_KEY)
+        //   throw new Error('LISTEN_KEY is not available in the environment');
+        // this.hubsCredentialString = process.env.LISTEN_KEY;
+        // if (!process.env.STORAGE_KEY)
+        //   throw new Error('STORAGE_KEY is not available in the environment');
+        // this.storageCredentialString = process.env.STORAGE_KEY;
+        // this.containerName = 'eventhub-container'; // Get this from Azure Portal
+        // this.containerClient = new ContainerClient(
+        //   this.storageCredentialString,
+        //   this.containerName
+        // );
+        // this.checkpointStore = new BlobCheckpointStore(this.containerClient);
+        // this.client = this.setConsumerClient(eventHubName, consumerGroup);
     }
-    setConsumerClient(eventHubName, consumerGroup) {
-        return new event_hubs_1.EventHubConsumerClient(consumerGroup, this.hubsCredentialString, eventHubName, this.checkpointStore);
-    }
+    // private setConsumerClient(
+    //   eventHubName: T['eventHubName'],
+    //   consumerGroup: T['consumerGroup']
+    // ) {
+    //   return new EventHubConsumerClient(
+    //     consumerGroup,
+    //     this.hubsCredentialString,
+    //     eventHubName,
+    //     this.checkpointStore
+    //   );
+    // }
     // Method to parse the event data into a JSON object
     parseMessage(event) {
         const data = event.body;
@@ -43,21 +53,20 @@ class Listener {
     CustomProcessEvent(event, context) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const consumerGroup = (_a = event.properties) === null || _a === void 0 ? void 0 : _a.consumerGroup;
-            if (!consumerGroup || consumerGroup !== this.consumerGroup) {
+            const subject = (_a = event.properties) === null || _a === void 0 ? void 0 : _a.subject;
+            if (!subject || subject !== this.consumerGroup) {
                 // Skip processing if consumer group doesn't match
+                console.log(`Skipping event with subject: ${subject} and consumer group: ${this.consumerGroup}`);
                 return;
             }
             const parsedData = this.parseMessage(event);
             yield this.onMessage(parsedData, context, event);
-            // Acknowledge the event
-            yield context.updateCheckpoint(event);
         });
     }
     // Define a method that can be called to start the listener
     listen() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('Listener conntected to:', this.eventHubName, ' : ', this.consumerGroup);
+            console.log('Listener conntected to:', this.consumerGroup);
             this.client.subscribe({
                 processEvents: (events, context) => __awaiter(this, void 0, void 0, function* () {
                     for (const event of events) {

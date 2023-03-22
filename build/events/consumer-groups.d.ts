@@ -1,12 +1,18 @@
 export declare enum ConsumerGroups {
-    TicketCreated = "ticket-created",
-    TicketUpdated = "ticket-updated",
-    OrderCreated = "order-created",
-    OrderCancelled = "order-cancelled"
+    Ticketing = "ticketing",
+    Payments = "payments",
+    Expiration = "expiration",
+    Orders = "orders"
 }
-export declare enum PartitionKeys {
-    TicketCreated = "ticket-created",
-    TicketUpdated = "ticket-updated",
-    OrderCreated = "order-created",
-    OrderCancelled = "order-cancelled"
+export declare enum Ticketing {
+    OrdersListener = "orders-listener"
+}
+export declare enum Payments {
+}
+export declare enum Expiration {
+    OrdersListener = "orders-listener"
+}
+export declare enum Orders {
+    ExpirationListener = "expiration-listener",
+    TicketsListener = "tickets-listener"
 }

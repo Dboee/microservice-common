@@ -1,21 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PartitionKeys = exports.ConsumerGroups = void 0;
+exports.Orders = exports.Expiration = exports.Payments = exports.Ticketing = exports.ConsumerGroups = void 0;
 var ConsumerGroups;
 (function (ConsumerGroups) {
-    ConsumerGroups["TicketCreated"] = "ticket-created";
-    ConsumerGroups["TicketUpdated"] = "ticket-updated";
-    ConsumerGroups["OrderCreated"] = "order-created";
-    ConsumerGroups["OrderCancelled"] = "order-cancelled";
-    // ExpirationComplete = 'expiration-complete',
-    // PaymentCreated = 'payment-created',
+    ConsumerGroups["Ticketing"] = "ticketing";
+    ConsumerGroups["Payments"] = "payments";
+    ConsumerGroups["Expiration"] = "expiration";
+    ConsumerGroups["Orders"] = "orders";
 })(ConsumerGroups = exports.ConsumerGroups || (exports.ConsumerGroups = {}));
-var PartitionKeys;
-(function (PartitionKeys) {
-    PartitionKeys["TicketCreated"] = "ticket-created";
-    PartitionKeys["TicketUpdated"] = "ticket-updated";
-    PartitionKeys["OrderCreated"] = "order-created";
-    PartitionKeys["OrderCancelled"] = "order-cancelled";
-    // ExpirationComplete = 'expiration-complete',
-    // PaymentCreated = 'payment-created',
-})(PartitionKeys = exports.PartitionKeys || (exports.PartitionKeys = {}));
+var Ticketing;
+(function (Ticketing) {
+    Ticketing["OrdersListener"] = "orders-listener";
+})(Ticketing = exports.Ticketing || (exports.Ticketing = {}));
+var Payments;
+(function (Payments) {
+})(Payments = exports.Payments || (exports.Payments = {}));
+var Expiration;
+(function (Expiration) {
+    Expiration["OrdersListener"] = "orders-listener";
+})(Expiration = exports.Expiration || (exports.Expiration = {}));
+var Orders;
+(function (Orders) {
+    Orders["ExpirationListener"] = "expiration-listener";
+    Orders["TicketsListener"] = "tickets-listener";
+})(Orders = exports.Orders || (exports.Orders = {}));

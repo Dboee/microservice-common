@@ -1,18 +1,16 @@
 import { EventHubProducerClient } from '@azure/event-hubs';
-import { ConsumerGroups } from './consumer-groups';
-import { EventHubs } from './event-hubs';
-interface Event {
-    consumerGroup: ConsumerGroups;
-    eventHubName: EventHubs;
-    data: any;
+import { Subjects } from './types/subjects';
+interface EventInterface {
+    data: {
+        properties: {
+            subject: Subjects;
+        };
+    };
 }
-export declare abstract class Publisher<T extends Event> {
-    abstract consumerGroup: T['consumerGroup'];
-    abstract eventHubName: T['eventHubName'];
-    private credentialString;
-    private client;
-    constructor(eventHubName: T['eventHubName'], consumerGroup: T['consumerGroup']);
-    protected setConsumerClient(eventHubName: T['eventHubName'], consumerGroup: T['consumerGroup']): EventHubProducerClient;
+export declare abstract class Publisher<T extends EventInterface> {
+    abstract subject: T['data']['properties']['subject'];
+    protected client: EventHubProducerClient;
+    constructor(client: EventHubProducerClient);
     publish(data: T['data']): Promise<void>;
 }
 export {};

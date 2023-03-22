@@ -1,8 +1,8 @@
-import { ConsumerGroups } from '../consumer-groups';
-import { EventHubs } from '../event-hubs';
+import { Subjects } from '../types/subjects';
 export interface IOrderCreatedEvent {
-    consumerGroup: ConsumerGroups.OrderCreated;
-    eventHubName: EventHubs.Orders;
+    properties: {
+        subject: Subjects.OrderCreated;
+    };
     data: {
         id: string;
         version: number;

@@ -1,8 +1,8 @@
-import { EventHubs } from '../event-hubs';
-import { ConsumerGroups } from '../consumer-groups';
+import { Subjects } from '../types/subjects';
 export interface IOrderCancelledEvent {
-    consumerGroup: ConsumerGroups.OrderCancelled;
-    eventHubName: EventHubs.Orders;
+    properties: {
+        subject: Subjects.OrderCancelled;
+    };
     data: {
         id: string;
         version: number;

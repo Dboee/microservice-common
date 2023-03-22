@@ -1,23 +1,19 @@
-import { EventData, ReceivedEventData, PartitionContext } from '@azure/event-hubs';
+import { EventHubConsumerClient, EventData, ReceivedEventData, PartitionContext } from '@azure/event-hubs';
 import { ConsumerGroups } from './consumer-groups';
-import { EventHubs } from './event-hubs';
+import { Subjects } from './types/subjects';
 interface Event {
+    properties: {
+        subject: Subjects;
+    };
     data: any;
-    eventHubName: EventHubs;
     consumerGroup: ConsumerGroups;
 }
 declare abstract class Listener<T extends Event> {
-    abstract onMessage(data: T['data'], context: PartitionContext, event: ReceivedEventData): void;
-    abstract eventHubName: T['eventHubName'];
+    abstract subject: T['data']['properties']['subject'];
     abstract consumerGroup: T['consumerGroup'];
-    private hubsCredentialString;
-    private storageCredentialString;
-    private containerName;
-    private containerClient;
-    private checkpointStore;
-    private client;
-    constructor(eventHubName: T['eventHubName'], consumerGroup: T['consumerGroup']);
-    private setConsumerClient;
+    abstract onMessage(data: T['data'], context: PartitionContext, event: ReceivedEventData): void;
+    protected client: EventHubConsumerClient;
+    constructor(client: EventHubConsumerClient);
     parseMessage(event: EventData): any;
     private CustomProcessEvent;
     listen(): Promise<void>;

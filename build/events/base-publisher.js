@@ -10,32 +10,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Publisher = void 0;
-const event_hubs_1 = require("@azure/event-hubs");
 class Publisher {
-    constructor(eventHubName, consumerGroup) {
-        // Client Setup
-        if (!process.env.PUBLISH_KEY)
-            throw new Error('No connection string defined for event hub');
-        this.credentialString = process.env.PUBLISH_KEY;
-        this.client = this.setConsumerClient(eventHubName, consumerGroup);
+    constructor(client) {
+        // sets the client property
+        this.client = client;
     }
-    setConsumerClient(eventHubName, consumerGroup) {
-        return new event_hubs_1.EventHubProducerClient(this.credentialString, eventHubName);
-    }
+    // Publishes an event to the event hub
     publish(data) {
         return __awaiter(this, void 0, void 0, function* () {
+            // Create a batch object.
             const batch = yield this.client.createBatch();
+            // Create an message(event) object.
             const message = {
                 body: data,
                 properties: {
-                    consumerGroup: this.consumerGroup,
+                    subject: this.subject,
                 },
             };
+            // Validates that the message has properties and a subject.
             if (!message.properties)
                 throw new Error('No property defined in event');
-            if (!message.properties.consumerGroup)
-                throw new Error('No consumerGroup defined in event');
+            if (!message.properties.subject)
+                throw new Error('No subject defined in event');
+            // Add the message to the batch.
             batch.tryAdd(message);
+            // Send the batch to the event hub.
             try {
                 yield this.client.sendBatch(batch);
             }
@@ -43,9 +42,10 @@ class Publisher {
                 console.error(error);
                 throw new Error(error);
             }
+            // Console logs the plublished event
+            console.log(`Event Published:`, message);
             // Close the producer client.
             yield this.client.close();
-            console.log(`Event Published to ${this.eventHubName}:${message.properties.consumerGroup}`);
         });
     }
 }

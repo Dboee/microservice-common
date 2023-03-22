@@ -1,8 +1,8 @@
-import { ConsumerGroups } from '../consumer-groups';
-import { EventHubs } from '../event-hubs';
+import { Subjects } from '../types/subjects';
 export interface ITicketCreatedEvent {
-    consumerGroup: ConsumerGroups.TicketCreated;
-    eventHubName: EventHubs.Tickets;
+    properties: {
+        subject: Subjects.TicketCreated;
+    };
     data: {
         id: string;
         version: number;
